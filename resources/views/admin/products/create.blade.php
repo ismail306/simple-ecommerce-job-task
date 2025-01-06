@@ -6,9 +6,15 @@
                     <h2 class="text-center">Create New Product</h2>
 
                     <div class="card-body">
-                        <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data">
+                        <form action="{{route('products.store')}}" method="POST" enctype="multipart/form-data" class="mt-4">
                             @csrf
+                            <!-- Product Name -->
+                            <div class="form-group">
+                                <label for="productName">Product Name</label>
+                                <input type="text" id="productName" name="name" class="form-control" placeholder="Enter product name" required>
+                            </div>
 
+                            <!-- Product Category -->
                             <div class="form-group">
                                 <label class="control-label">Select Category</label>
                                 <select class="custom-select" name="category" id="categories">
@@ -24,84 +30,44 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label">Select Sub Category</label>
-                                <select class="custom-select" name="subcategory" id="subcategories">
-                                    <option value="" disabled selected> Select Sub Category</option>
+                            <!-- Options -->
+                            <div id="options">
+                                <h5>Options</h5>
+                                <div class="card mb-3 option">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <!-- Option Name -->
+                                            <div class="form-group col-md-4">
+                                                <label for="optionName_0">Name</label>
+                                                <input type="text" id="optionName_0" name="options[0][name]" class="form-control" placeholder="Enter option name" required>
+                                            </div>
 
-                                </select>
+                                            <!-- Option Image -->
+                                            <div class="form-group col-md-4">
+                                                <label for="optionImage_0">Image</label>
+                                                <input type="file" id="optionImage_0" name="options[0][image]" class="form-control">
+                                            </div>
 
+                                            <!-- Option Price -->
+                                            <div class="form-group col-md-3">
+                                                <label for="optionPrice_0">Price</label>
+                                                <input type="number" id="optionPrice_0" name="options[0][price]" class="form-control" placeholder="Enter price" required>
+                                            </div>
 
-                                @error('subcategory')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                            <!-- Remove Button -->
+                                            <div class="form-group col-md-1 d-flex align-items-end">
+                                                <button type="button" class="btn btn-danger remove-option" title="Remove Option">&times;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-
-                            <div class="form-group">
-                                <label for="title">Title</label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required>
-                                @error('title')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-
-                            <div class="form-group text-secondary">
-                                <label for="description">Description</label>
-                                <textarea id="summernote" class="form-control @error('description') is-invalid @enderror" rows="4" name="description">{{ old('description') }}</textarea>
-                                @error('description')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="price">Price / Old Price</label>
-                                <input id="price" type="number" min="0" class="form-control" name="price" value="{{ old('price') }}" required>
-                                @error('price')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="discount_price">discount_price / New Price'</label>
-                                <input id="discount_price" type="number" min="0" class="form-control " name="discount_price" value="{{ old('discount_price') }}" required>
-                                @error('discount_price')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label">Category Photo</label>
-                                <input class="form-control form-white" required type="file" name="image" />
-                                @error('image')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-
-                            <div class="form-group mb-4">
-                                <label class="control-label">Status</label>
-                                <select class="custom-select" name="status" id="">
-                                    <option value="1" selected> Active</option>
-                                    <option value="0"> Inactive</option>
-                                </select>
-                            </div>
-
-
-
-
-                            <div class="form-group mb-0">
-                                <button type="submit" class="btn btn-primary">Create Product</button>
-                            </div>
+                            <!-- Add Option Button -->
+                            <button type="button" id="add-option" class="btn btn-primary mb-4">Add Option</button>
+                            <br>
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-success">Save Product</button>
                         </form>
                     </div>
                 </div>
@@ -109,32 +75,53 @@
         </div>
         @push('scripts')
         <script>
-            $(document).on('change', '#categories', function() {
-                var categoryId = $(this).val();
-                //alert("Selected Category ID: " + categoryId); 
-                if (categoryId) {
-                    $.ajax({
-                        url: '/get-subcategories-by-category/' + categoryId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            console.log(response);
-                            $('#subcategories').empty(); // Clear the subcategory dropdown
+            $(document).ready(function() {
+                let optionIndex = 1;
 
-                            if (response.subcategories && response.subcategories.length > 0) {
-                                $('#subcategories').append('<option value="" disabled selected>Select Subcategory</option>');
-                                $.each(response.subcategories, function(key, subcategory) {
-                                    $('#subcategories').append('<option value="' + subcategory.id + '">' + subcategory.name + '</option>');
-                                });
-                            } else {
-                                $('#subcategories').append('<option value="" disabled>No Subcategories Available</option>');
-                            }
-                        },
-                        error: function() {
-                            alert('Error fetching subcategories.');
-                        }
+                // Add Option
+                $('#add-option').click(function() {
+                    $('#options').append(`
+                <div class="card mb-3 option">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="optionName_${optionIndex}">Option Name</label>
+                                <input type="text" id="optionName_${optionIndex}" name="options[${optionIndex}][name]" class="form-control" placeholder="Enter option name" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="optionImage_${optionIndex}">Option Image</label>
+                                <input type="file" id="optionImage_${optionIndex}" name="options[${optionIndex}][image]" class="form-control">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="optionPrice_${optionIndex}">Price</label>
+                                <input type="number" id="optionPrice_${optionIndex}" name="options[${optionIndex}][price]" class="form-control" placeholder="Enter price" required>
+                            </div>
+                            <div class="form-group col-md-1 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger remove-option" title="Remove Option">&times;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+                    optionIndex++;
+                });
+
+                // Remove Option
+                $(document).on('click', '.remove-option', function() {
+                    $(this).closest('.option').remove();
+                });
+
+                // Add to Cart
+                $('.add-to-cart').click(function() {
+                    const optionId = $(this).data('id');
+                    $.post('/cart/add', {
+                        option_id: optionId,
+                        quantity: 1,
+                        _token: '{{ csrf_token() }}'
+                    }, function(response) {
+                        alert('Added to cart!');
                     });
-                }
+                });
             });
         </script>
         @endpush

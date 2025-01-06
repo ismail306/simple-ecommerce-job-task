@@ -23,4 +23,3 @@ Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashb
 Route::resource('admin/categories', CategoryController::class, ['names' => 'categories']);
 Route::resource('admin/products', ProductController::class, ['names' => 'products']);
 Route::get('/product/{slug}', [HomeController::class, 'getProductBySlug'])->name('getProductBySlug');
-

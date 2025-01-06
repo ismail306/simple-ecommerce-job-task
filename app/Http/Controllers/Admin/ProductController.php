@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Interfaces\ProductInterface;
 use App\Models\Admin\Category;
 use App\Models\Admin\Product;
 use App\Models\Admin\SubCategory;
@@ -15,6 +16,12 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
     use CommonHelperTrait;
     /**
      * Display a listing of the resource.
@@ -23,8 +30,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //get products with images and category
-        $products = Product::with('subCategory', 'category')->orderBy('created_at', 'desc')->get();
+        //get products with images
+        $products = Product::with('options')->orderBy('created_at', 'desc')->get();
         return view('admin.products.index', compact('products'));
     }
 
@@ -39,33 +46,13 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(ProductStoreRequest $request)
     {
-
-        $path = 'storage/images/product-images';
-        $filename = $this->storeImage($path, $request->file('image'));
-
-        $product = new Product();
-
-        $product->slug = Str::slug($request->title) . '_' . time();
-        $product->title = $request->title;
-        $product->image = $filename;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->category_id = $request->category;
-        $product->sub_category_id = $request->subcategory;
-        $product->status = $request->status;
-        $product->save();
-
-        return redirect()->route('products.index')->with('success', 'Product created successfully');
+        $data = $request->all();
+        return $this->productRepository->store($data);
     }
+
+
 
     /**
      * Display the specified resource.

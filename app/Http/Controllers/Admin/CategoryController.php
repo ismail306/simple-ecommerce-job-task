@@ -30,6 +30,7 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
+    
     public function store(CategoryStoreRequest $request)
     {
 
