@@ -31,7 +31,7 @@ class ProductController extends Controller
     public function index()
     {
         //get products with images
-        $products = Product::with('options')->orderBy('created_at', 'desc')->get();
+        $products = Product::with('variants')->orderBy('created_at', 'desc')->get();
         return view('admin.products.index', compact('products'));
     }
 
@@ -75,8 +75,7 @@ class ProductController extends Controller
     {
         //dd products category id
         $categories = Category::where('status', 1)->get();
-        $subcategories = SubCategory::where('category_id', $product->category_id)->get();
-        return view('admin.products.edit', compact('product', 'categories', 'subcategories'));
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -89,24 +88,8 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, Product $product)
     {
 
-
-        if ($request->hasFile('image')) {
-            $path = 'storage/images/product-images';
-            $filename = $this->updateImage($path, $request->file('image'), $product->image);
-            $product->image = $filename;
-        }
-
-        $product->title = $request->title;
-        $product->slug = Str::slug($request->title) . '_' . time();
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->sub_category_id = $request->subcategory;
-        $product->category_id = $request->category;
-        $product->status = $request->status;
-        $product->save();
-
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        $data = $request->all();
+        return $this->productRepository->update($data , $product);
     }
 
     /**
