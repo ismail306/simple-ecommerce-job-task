@@ -30,42 +30,47 @@
                                 @enderror
                             </div>
 
-                            <!-- Options -->
-                            <div id="options">
-                                <h5>Options</h5>
-                                <div class="card mb-3 option">
+                            <!-- variants -->
+                            <div id="variants">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0">Variants / Options</h5>
+                                    <button type="button" id="add-variant" class="btn btn-primary">
+                                        Add Variant
+                                    </button>
+                                </div>
+
+
+                                <div class="card mb-3 variant">
                                     <div class="card-body">
                                         <div class="form-row">
-                                            <!-- Option Name -->
+                                            <!-- Variant Name -->
                                             <div class="form-group col-md-4">
-                                                <label for="optionName_0">Name</label>
-                                                <input type="text" id="optionName_0" name="options[0][name]" class="form-control" placeholder="Enter option name" required>
+                                                <label for="variantName_0">Name</label>
+                                                <input type="text" id="variantName_0" name="variants[0][name]" class="form-control" placeholder="Enter variant name" required>
                                             </div>
 
-                                            <!-- Option Image -->
+                                            <!-- Variant Image -->
                                             <div class="form-group col-md-4">
-                                                <label for="optionImage_0">Image</label>
-                                                <input type="file" id="optionImage_0" name="options[0][image]" class="form-control">
+                                                <label for="variantImage_0">Image</label>
+                                                <input type="file" id="variantImage_0" name="variants[0][image]" class="form-control" required>
                                             </div>
 
-                                            <!-- Option Price -->
+                                            <!-- Variant Price -->
                                             <div class="form-group col-md-3">
-                                                <label for="optionPrice_0">Price</label>
-                                                <input type="number" id="optionPrice_0" name="options[0][price]" class="form-control" placeholder="Enter price" required>
+                                                <label for="variantPrice_0">Price</label>
+                                                <input type="number" id="variantPrice_0" name="variants[0][price]" class="form-control" placeholder="Enter price" required>
                                             </div>
 
                                             <!-- Remove Button -->
                                             <div class="form-group col-md-1 d-flex align-items-end">
-                                                <button type="button" class="btn btn-danger remove-option" title="Remove Option">&times;</button>
+                                                <button type="button" class="btn btn-danger remove-variant" title="Remove Variant">&times;</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Add Option Button -->
-                            <button type="button" id="add-option" class="btn btn-primary mb-4">Add Option</button>
-                            <br>
+
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-success">Save Product</button>
                         </form>
@@ -76,46 +81,46 @@
         @push('scripts')
         <script>
             $(document).ready(function() {
-                let optionIndex = 1;
+                let variantIndex = 1;
 
-                // Add Option
-                $('#add-option').click(function() {
-                    $('#options').append(`
-                <div class="card mb-3 option">
+                // Add Variant
+                $('#add-variant').click(function() {
+                    $('#variants').append(`
+                <div class="card mb-3 variant">
                     <div class="card-body">
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="optionName_${optionIndex}">Option Name</label>
-                                <input type="text" id="optionName_${optionIndex}" name="options[${optionIndex}][name]" class="form-control" placeholder="Enter option name" required>
+                                <label for="variantName_${variantIndex}">Variant Name</label>
+                                <input type="text" id="variantName_${variantIndex}" name="variants[${variantIndex}][name]" class="form-control" placeholder="Enter variant name" required>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="optionImage_${optionIndex}">Option Image</label>
-                                <input type="file" id="optionImage_${optionIndex}" name="options[${optionIndex}][image]" class="form-control">
+                                <label for="variantImage_${variantIndex}">Variant Image</label>
+                                <input type="file" id="variantImage_${variantIndex}" name="variants[${variantIndex}][image]" class="form-control">
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="optionPrice_${optionIndex}">Price</label>
-                                <input type="number" id="optionPrice_${optionIndex}" name="options[${optionIndex}][price]" class="form-control" placeholder="Enter price" required>
+                                <label for="variantPrice_${variantIndex}">Price</label>
+                                <input type="number" id="variantPrice_${variantIndex}" name="variants[${variantIndex}][price]" class="form-control" placeholder="Enter price" required>
                             </div>
                             <div class="form-group col-md-1 d-flex align-items-end">
-                                <button type="button" class="btn btn-danger remove-option" title="Remove Option">&times;</button>
+                                <button type="button" class="btn btn-danger remove-variant" title="Remove Variant">&times;</button>
                             </div>
                         </div>
                     </div>
                 </div>
             `);
-                    optionIndex++;
+                    variantIndex++;
                 });
 
-                // Remove Option
-                $(document).on('click', '.remove-option', function() {
-                    $(this).closest('.option').remove();
+                // Remove Variant
+                $(document).on('click', '.remove-variant', function() {
+                    $(this).closest('.variant').remove();
                 });
 
                 // Add to Cart
                 $('.add-to-cart').click(function() {
-                    const optionId = $(this).data('id');
+                    const variantId = $(this).data('id');
                     $.post('/cart/add', {
-                        option_id: optionId,
+                        variant_id: variantId,
                         quantity: 1,
                         _token: '{{ csrf_token() }}'
                     }, function(response) {

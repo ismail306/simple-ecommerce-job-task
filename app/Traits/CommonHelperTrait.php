@@ -35,7 +35,7 @@ trait CommonHelperTrait
     }
 
 
-    public function UpdateImage($path, $image, $oldImage)
+    public function updateImage($path, $image, $oldImage)
     {
         $oldImagePath = public_path($path . '/' . $oldImage);
 
