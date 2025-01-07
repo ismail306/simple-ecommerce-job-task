@@ -4,7 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductVariant  extends Model
+class ProductOption extends Model
 {
     protected $fillable = ['product_id', 'name', 'image', 'price'];
 

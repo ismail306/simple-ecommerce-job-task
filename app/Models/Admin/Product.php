@@ -6,16 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['name', 'category_id', 'status'];
+    protected $fillable = ['name', 'category_id','status'];
 
-
-    public function category()
+    public function options()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
-    }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(ProductOption::class);
     }
 }

@@ -1,127 +1,164 @@
 <x-admin.layouts.master>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <h2 class="text-center">Edit Product</h2>
 
-                    <div class="card-body">
-                        <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
-                            @csrf
-                            @method('PUT')
+    <x-slot:breadcrumb>
+        Product / Edit
+        </x-slot>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <h2 class="text-center">Create New Product</h2>
 
-                            <!-- Product Name -->
-                            <div class="form-group">
-                                <label for="productName">Product Name</label>
-                                <input type="text" id="productName" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
-                            </div>
+                        <div class="card-body">
+                            <form action="{{route('products.update',$product->id)}}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
 
-                            <!-- Product Category -->
-                            <div class="form-group">
-                                <label class="control-label">Select Category</label>
-                                <select class="custom-select" name="category" id="categories">
-                                    <option value="" disabled>Select Category</option>
-                                    @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ $category->id == $product->category_id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                                @error('category')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                                <div class="form-group">
+                                    <label class="control-label">Select Category</label>
+                                    <select class="custom-select" name="category" id="categories">
+                                        <option value="" disabled>Select Category</option>
+                                        @foreach($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
 
-                            <!-- Variants -->
-                            <div id="variants">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="mb-0">Variants / Options</h5>
-                                    <button type="button" id="add-variant" class="btn btn-primary">Add Variant</button>
+                                    @error('category')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
-                                <!-- Existing Variants -->
-                                @foreach ($product->variants as $index => $variant)
-                                <div class="card mb-3 variant">
-                                    <div class="card-body">
-                                        <div class="form-row">
-                                            <!-- Variant Name -->
-                                            <div class="form-group col-md-4">
-                                                <label for="variantName_{{ $index }}">Name</label>
-                                                <input type="text" id="variantName_{{ $index }}" name="variants[{{ $index }}][name]" class="form-control" value="{{ old("variants.$index.name", $variant->name) }}" required>
-                                            </div>
-                                            <input type="hidden"  name="variants[{{ $index }}][id]" class="form-control" value="{{ old("variants.$index.id", $variant->id) }}" required>
+                                <div class="form-group">
+                                    <label class="control-label">Select Sub Category</label>
+                                    <select class="custom-select" name="subcategory" id="subcategories">
+                                        <option value="" disabled selected>Select Sub Category</option>
+                                        @foreach($subcategories as $subcategory)
+                                        <option value="{{ $subcategory->id }}" {{ $product->sub_category_id == $subcategory->id ? 'selected' : '' }}>
+                                            {{ $subcategory->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
 
-                                            <!-- Variant Image -->
-                                            <div class="form-group col-md-4">
-                                                <label for="variantImage_{{ $index }}">Image</label>
-                                                <input type="file" id="variantImage_{{ $index }}" name="variants[{{ $index }}][image]" class="form-control">
-                                                @if($variant->image)
-                                                <img src="{{ asset('storage/images/product-images/' . $variant->image) }}" alt="{{ $variant->name }}" class="img-thumbnail mt-2" style="max-height: 100px;">
-                                                @endif
-                                            </div>
+                                    @error('subcategory')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                            <!-- Variant Price -->
-                                            <div class="form-group col-md-3">
-                                                <label for="variantPrice_{{ $index }}">Price</label>
-                                                <input type="number" id="variantPrice_{{ $index }}" name="variants[{{ $index }}][price]" class="form-control" value="{{ old("variants.$index.price", $variant->price) }}" required>
-                                            </div>
 
-                                            <!-- Remove Button -->
-                                            <div class="form-group col-md-1 d-flex align-items-end">
-                                                <button type="button" class="btn btn-danger remove-variant" title="Remove Variant">&times;</button>
-                                            </div>
+
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{$product->title}}" required>
+                                    @error('title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+
+                                <div class="form-group text-secondary">
+                                    <label for="description">Description</label>
+                                    <textarea id="summernote" class="form-control @error('description') is-invalid @enderror" name="description" required autocomplete="description">{{$product->description}} </textarea>
+                                    @error('description')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="price">Price/ Old Price</label>
+                                    <input id="price" type="number" min="0" class="form-control" name="price" value="{{$product->price}}" required>
+                                    @error('price')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="discount_price">discount_price/ New Price</label>
+                                    <input id="discount_price" type="number" min="0" class="form-control " name="discount_price" value="{{$product->discount_price}}" required>
+                                    @error('discount_price')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <img class="" style="height: 100px;width:100px;" src="{{asset('storage/images/product-images/'.$product->image)}}" alt="images">
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="control-label">Update Image</label>
+                                            <input class="form-control form-white" type="file" name="image" />
+                                            @error('image')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
-                                </div>
-                                @endforeach
-                            </div>
 
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn btn-success">Update Product</button>
-                        </form>
+                                    @error('images')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Status</label>
+                                    <select class="custom-select" name="status" id="">
+                                        <option value="1" {{ $product->status == 1 ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ $product->status == 0 ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+                                </div>
+
+
+
+                                <div class="form-group mb-0">
+                                    <button type="submit" class="btn btn-primary btn-block">{{ __('Update Product') }}</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        @push('scripts')
-        <script>
-            $(document).ready(function() {
-                let variantIndex = {{ $product->variants->count() }};
+            @push('scripts')
+            <script>
+                $(document).on('change', '#categories', function() {
+                    var categoryId = $(this).val();
 
-                // Add Variant
-                $('#add-variant').click(function() {
-                    $('#variants').append(`
-                    <div class="card mb-3 variant">
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label for="variantName_${variantIndex}">Variant Name</label>
-                                    <input type="text" id="variantName_${variantIndex}" name="variants[${variantIndex}][name]" class="form-control" placeholder="Enter variant name" required>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="variantImage_${variantIndex}">Variant Image</label>
-                                    <input type="file" id="variantImage_${variantIndex}" name="variants[${variantIndex}][image]" class="form-control">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="variantPrice_${variantIndex}">Price</label>
-                                    <input type="number" id="variantPrice_${variantIndex}" name="variants[${variantIndex}][price]" class="form-control" placeholder="Enter price" required>
-                                </div>
-                                <div class="form-group col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-variant" title="Remove Variant">&times;</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    `);
-                    variantIndex++;
+                    if (categoryId) {
+                        $.ajax({
+                            url: '/get-subcategories-by-category/' + categoryId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                $('#subcategories').empty(); // Clear the subcategory dropdown
+
+                                if (response.subcategories && response.subcategories.length > 0) {
+                                    $('#subcategories').append('<option value="" disabled selected>Select Subcategory</option>');
+                                    $.each(response.subcategories, function(key, subcategory) {
+                                        $('#subcategories').append('<option value="' + subcategory.id + '">' + subcategory.name + '</option>');
+                                    });
+                                } else {
+                                    $('#subcategories').append('<option value="" disabled>No Subcategories Available</option>');
+                                }
+                            },
+                            error: function() {
+                                alert('Error fetching subcategories.');
+                            }
+                        });
+                    }
                 });
+            </script>
 
-                // Remove Variant
-                $(document).on('click', '.remove-variant', function() {
-                    $(this).closest('.variant').remove();
-                });
-            });
-        </script>
-        @endpush
+            @endpush
 </x-admin.layouts.master>

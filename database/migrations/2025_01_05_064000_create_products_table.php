@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('category_id')->nullable()->constrained('categories');
+            $table->string('category_id');
             $table->enum('status', ['1', '0'])->default('1');
             $table->timestamps();
         });
