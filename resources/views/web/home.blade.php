@@ -1,23 +1,46 @@
 <x-web.layouts.master>
-    <!-- Shoes -->
-    <section class="container" id="shoes">
-        @foreach($categories as $category)
-        <h2 class="mb-2 mt-4 text-center">{{$category->name}}</h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach($category->subCategory as $sCat)
-            <div class="col">
-                <div class="card h-100 border-0 shadow-lg">
-                    <img src="{{asset('storage/images/sub-category-images/'.$sCat->image)}}" class="card-img-top" alt="...">
-
-                    <div class="m-3 text-center">
-                        <a href="{{ route('getProductsBySCat', ['name' => $sCat->name, 'id' => $sCat->id]) }}" class="text-decoration-none custom-button">See Products</a>
+    <div class="container mt-5">
+        <h2 class="mb-4">Available Products</h2>
+        <div class="row">
+            @forelse ($products as $product)
+            @foreach ($product->options as $option)
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h6 class="card-title text-truncate">{{ $option->name }}</h6>
+                        <img src="{{ asset('storage/images/product-images/' . $option->image) }}"
+                            alt="{{ $option->name }}"
+                            class="img-fluid mt-2"
+                            style="max-height: 150px;">
+                        <p class="mt-2">
+                            <strong>Price:</strong> ${{ number_format($option->price, 2) }}
+                        </p>
+                        <button class="btn btn-success btn-sm add-to-cart"
+                            data-product-id="{{ $product->id }}"
+                            data-option-id="{{ $option->id }}">
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
             @endforeach
+            @empty
+            <div class="col-12">
+                <p class="text-center">No products available</p>
+            </div>
+            @endforelse
         </div>
-        @endforeach
-    </section>
+
+
+
+        <!-- Cart Summary -->
+        <div class="mt-5">
+            <h3>Cart Summary</h3>
+            <ul id="cart-items" class="list-group">
+                <!-- Cart items will be dynamically updated -->
+            </ul>
+        </div>
+    </div>
 
 
 </x-web.layouts.master>

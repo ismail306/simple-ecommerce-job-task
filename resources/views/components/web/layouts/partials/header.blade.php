@@ -22,25 +22,22 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
                             @foreach($categoriesmenu as $category)
-                            <li class="dropdown-submenu">
+                            <li class="dropdown-item">
+                                <a class="dropdown-item" href="#">{{$category->name}}</a>
+                            </li>
+                            @endforeach
 
-                                <a class="dropdown-item dropdown-toggle" href="{{ route('getProductsByCat', ['name' => $category->name, 'id' => $category->id]) }}"">{{$category->name}}</a>
-                                
-
+                        </ul>
                     </li>
-                    @endforeach
-
-                </ul>
-                </li>
 
                 </ul>
 
                 <ul class=" navbar-nav mb-2 mb-lg-0">
-                            <li><a class="dropdown-item" href="{{route('dashboard')}}">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="{{route('dashboard')}}">Dashboard</a></li>
 
 
 
-                        </ul>
+                </ul>
             </div>
         </div>
     </nav>

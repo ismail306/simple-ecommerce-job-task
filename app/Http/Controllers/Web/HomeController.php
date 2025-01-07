@@ -13,20 +13,8 @@ class HomeController extends Controller
     public function index()
     {
         $categories = Category::where('status', 1)->get();
-        return view('web.home', compact('categories'));
+        $products = Product::with('options')->orderBy('created_at', 'desc')->get();
+        return view('web.home', compact('categories', 'products'));
     }
 
-    public function getProductsByCat($name, $id)
-    {
-        $catOrSCatProducts = Category::with('product')->where('id', $id)->where('status', 1)->first();
-
-        return view('web.products', compact('catOrSCatProducts'));
-    }
-
-    public function getProductBySlug($slug)
-    {
-        $product = Product::where('slug', $slug)->where('status', 1)->first();
-
-        return view('web.product-details', compact('product'));
-    }
 }
