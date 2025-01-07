@@ -17,41 +17,19 @@ class CategoryRepository implements CategoryInterface
 
     public function store($data)
     {
-        //dd($data);
-        $path = 'storage/images/category-images';
-        $filename = $this->storeImage($path, $data['image']);
-
 
         $categories = new Category();
-        $categories->name = $data['name'];
-        $categories->image = $filename;
-        $categories->description = $data['description'];
-        $categories->status = $data['status'];
-
-
-        $categories->save();
-
+        $categories->create($data);
         return redirect()->route('categories.index')->with('success', 'Category created successfully');
     }
 
-    public function update($data, $categoryId)
+    public function update($data, $category)
     {
+        return $category->update($data);
+    }
 
-        $category = Category::findOrFail($categoryId);
-
-        if (isset($data['image']) && $data['image']) {
-            $path = 'storage/images/category-images';
-            $filename = $this->updateImage($path, $data['image'], $category->image);
-            $category->image = $filename;
-        }
-
-
-
-        $category->name = $data['name'];
-        $category->status = $data['status'];
-        $category->description = $data['description'];
-        $category->save();
-
-        return $category;
+    public function destroy($category)
+    {
+        return $category->delete();
     }
 }

@@ -30,16 +30,15 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    
+
     public function store(CategoryStoreRequest $request)
     {
 
         $data = $request->all();
-        $data['image'] = $request->file('image');
         return $this->categoryRepository->store($data);
     }
 
-    public function show(Category $categorie)
+    public function show(Category $category)
     {
         //
 
@@ -50,15 +49,16 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(CategoryUpdateRequest $request, $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
+        //dd($request->all());
         $this->categoryRepository->update($request->all(), $category);
         return redirect()->route('categories.index')->with('success', 'Category updated successfully');
     }
 
     public function destroy(Category $category)
     {
-        $category->delete();
+        $this->categoryRepository->destroy( $category);
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
     }
 }

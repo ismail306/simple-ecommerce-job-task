@@ -20,7 +20,7 @@
                         @method('PUT')
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="control-label">Category Name</label>
                                 <input class="form-control form-white" required placeholder="Category Name" type="text" value="{{ old('name', $category->name) }}" name="name" />
                                 @error('name')
@@ -28,35 +28,7 @@
                                 @enderror
 
                             </div>
-                            <div class="col-md-4">
-                                <div style="display: flex; justify-content:center;">
-                                    <img class="" style="height: 100px;width:100px;" src="{{asset('storage/images/category-images/'.$category->image)}}" alt="images">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
 
-                                <label class="control-label">Update Image</label>
-                                <input class="form-control form-white" type="file" name="image" />
-                                @error('image')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-
-                            </div>
-
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="control-label">Category Description</label>
-                                <textarea style="height: 100px;" class="form-control form-white"  placeholder="Category Description" value="{{ old('description', $category->description) }}" type="text" maxlength="80" name="description">{{ old('description', $category->description) }}</textarea>
-                                @error('description')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-check mb-4">
                                     <label class="control-label">Status</label>
@@ -67,6 +39,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="control-label">Category Description</label>
+                                <textarea style="height: 100px;" class="form-control form-white" placeholder="Category Description" value="{{ old('description', $category->description) }}" type="text" maxlength="80" name="description">{{ old('description', $category->description) }}</textarea>
+                                @error('description')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                        </div>
+
+
                         <div class="row d-flex justify-content-center mt-3">
                             <button class="btn btn-md btn-success w-50 " type="submit">Update</button>
                         </div>

@@ -30,12 +30,16 @@
                                 @enderror
 
                             </div>
+
                             <div class="col-md-6">
-                                <label class="control-label">Category Photo</label>
-                                <input class="form-control form-white" required type="file" name="image" />
-                                @error('image')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+
+                                <div class="form-check mb-4">
+                                    <label class="control-label">Status</label>
+                                    <select class="custom-select" name="status" id="">
+                                        <option value="1" selected> Active</option>
+                                        <option value="0"> Inactive</option>
+                                    </select>
+                                </div>
 
                             </div>
 
@@ -49,22 +53,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-
-                                <div class="form-check mb-4">
-                                    <label class="control-label">Status</label>
-                                    <select class="custom-select" name="status" id="">
-                                        <option value="1" selected> Active</option>
-                                        <option value="0"> Inactive</option>
-                                    </select>
-                                </div>
-
-                            </div>
-
 
                         </div>
                         <div class="row d-flex justify-content-center mt-3">

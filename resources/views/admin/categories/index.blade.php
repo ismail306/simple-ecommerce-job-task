@@ -42,8 +42,8 @@
                       <thead>
                         <tr>
                           <th scope="col">#</th>
-                          <th scope="col">Image</th>
-                          <th scope="col">Category</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Description</th>
                           <th scope="col">Status</th>
                           <th scope="col" style=" display:flex; justify-content:center;">Action</th>
                         </tr>
@@ -53,8 +53,8 @@
                         @foreach($categories as $category)
                         <tr>
                           <th>{{ $loop->iteration }}</th>
-                          <td><img class="" style="height: 80px;width:80px;" src="{{asset('storage/images/category-images/'.$category->image)}}" alt="images"></td>
                           <td>{{ $category->name }}</td>
+                          <td>{{ $category->description}}</td>
                           <td>
                             @if ($category->status)
                             <span class="badge badge-success">Active</span>

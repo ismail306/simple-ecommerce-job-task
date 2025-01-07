@@ -7,5 +7,6 @@ interface CategoryInterface
 
     public function all();
     public function store(array $data);
-    public function update(array $data, $id);
+    public function update(array $data, $category);
+    public function destroy($category);
 }
