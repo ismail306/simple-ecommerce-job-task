@@ -3,7 +3,7 @@
         <h2 class="mb-4">Available Products</h2>
         <div class="row">
             @forelse ($products as $product)
-            @foreach ($product->options as $option)
+            @foreach ($product->variants as $option)
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm text-center">
                     <div class="card-body">

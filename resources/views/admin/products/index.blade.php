@@ -39,9 +39,9 @@
                                         <tbody>
                                             @forelse ($products as $product)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $product->name }}</td>
-                                                <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                                <td class="align-middle">{{ $loop->iteration }}</td>
+                                                <td class="align-middle">{{ $product->name }}</td>
+                                                <td class="align-middle">{{ $product->category->name ?? 'N/A' }}</td>
                                                 <td>
                                                     @foreach ($product->variants as $variant)
                                                     <div class="mb-2">
@@ -53,12 +53,22 @@
                                                     <hr>
                                                     @endforeach
                                                 </td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('products.edit', $product->id) }}" class=" mx-1 btn btn-warning"><i class="fa fa-edit"></i></a>
+                                                <td class="align-middle">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <a href="{{ route('products.edit', $product->id) }}" class="mx-1 btn btn-warning">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
 
-                                                    <button class="btn btn-danger btn-sm" data-id="{{ $product->id }}">
-                                                        Delete
-                                                    </button>
+                                                        <form action="{{ route('products.destroy', $product->id) }}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">
+                                                                <i class="fa fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+
+
                                                 </td>
                                             </tr>
                                             @empty
