@@ -45,7 +45,7 @@
             let sessionId = localStorage.getItem("session_id");
             if (sessionId) {
                 $.ajax({
-                    url: "{{ route('carts.show') }}", 
+                    url: "{{ route('carts.show') }}",
                     type: "GET",
                     data: {
                         session_id: sessionId
@@ -95,12 +95,13 @@
             });
 
             function updateCartSummary(cartItems) {
+                //console.log(cartItems);
                 let cartList = $('#cart-items');
                 cartList.empty();
                 cartItems.forEach(item => {
                     cartList.append(`
                     <li class="list-group-item">
-                        ${item.product_name} - ${item.quantity} x $${item.price} 
+                        ${item.variant.name} - ${item.quantity} x $${item.price} 
                         <button class="btn btn-danger btn-sm float-right remove-from-cart" data-cart-id="${item.id}">Remove</button>
                     </li>
                 `);
@@ -118,7 +119,7 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        updateCartSummary(response.cartItems);
+                        updateCartSummary(response.data);
                         //alert("Item removed from cart");
                     },
                     error: function(error) {

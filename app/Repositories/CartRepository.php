@@ -62,8 +62,15 @@ class CartRepository implements CartInterface
         return CartResources::collection($cartItems);
     }
 
-    public function destroy($cart)
+    public function destroy($id)
     {
-        return $cart->delete();
+        $cartItem = Cart::findOrFail($id);
+        $sessionId = $cartItem->session_id;
+        $cartItem->delete();
+
+        $cartItems = Cart::where('session_id', $sessionId)
+            ->with('product', 'variant')
+            ->get();
+        return CartResources::collection($cartItems);
     }
 }

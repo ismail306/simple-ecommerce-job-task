@@ -19,6 +19,12 @@ class Cart extends JsonResource
             'product_name' => $this->product->name,
             'quantity' => $this->quantity,
             'price' => number_format($this->variant->price, 2),
+            'variant' => [
+                'id' => $this->variant->id,
+                'name' => $this->variant->name,
+                'price' => number_format($this->variant->price, 2),
+                'attributes' => $this->variant->attributes, // If the variant has attributes
+            ],
         ];
     }
 }
