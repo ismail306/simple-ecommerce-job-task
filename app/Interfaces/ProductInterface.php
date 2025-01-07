@@ -9,5 +9,5 @@ interface ProductInterface
     public function store(array $data);
     public function show($product);
     public function update(array $data, $product);
-    public function delete( $product);
+    public function destroy( $product);
 }

@@ -6,6 +6,7 @@ use App\Interfaces\ProductInterface;
 use App\Models\Admin\Category;
 use App\Models\Admin\Product;
 use App\Traits\CommonHelperTrait;
+use Illuminate\Support\Facades\Log;
 
 class ProductRepository implements ProductInterface
 {
@@ -18,23 +19,33 @@ class ProductRepository implements ProductInterface
 
     public function store($data)
     {
+        try {
+            // Create the product
+            $data['category_id'] = $data['category'];
+            $product = Product::create($data);
 
-        $data['category_id'] =  $data['category'];
-        $product = Product::create($data);
-        $path = 'storage/images/product-images';
-        if (isset($data['variants']) && is_array($data['variants'])) {
-            foreach ($data['variants'] as $variant) {
-                $filename = isset($variant['image']) ? $this->storeImage($path, $variant['image']) : null;
-                $product->variants()->create([
-                    'name' => $variant['name'],
-                    'price' => $variant['price'],
-                    'image' => $filename,
-                ]);
+            $path = 'storage/images/product-images';
+
+            if (isset($data['variants']) && is_array($data['variants'])) {
+                foreach ($data['variants'] as $variant) {
+                    // store the variant image and create the variant
+                    $filename = isset($variant['image']) ? $this->storeImage($path, $variant['image']) : null;
+                    $product->variants()->create([
+                        'name' => $variant['name'],
+                        'price' => $variant['price'],
+                        'image' => $filename,
+                    ]);
+                }
             }
-        }
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully');
+            return redirect()->route('products.index')->with('success', 'Product created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error creating product or variant: ' . $e->getMessage());
+
+            return redirect()->route('products.index')->with('error', 'Product created successfully, but there was an issue with variants');
+        }
     }
+
 
     public function update($data, $product)
     {
@@ -68,7 +79,7 @@ class ProductRepository implements ProductInterface
                         ]);
                     }
                 } else {
-                    // New variant: create it
+                    // New variant
                     $filename = isset($variant['image']) && $variant['image'] ? $this->storeImage($path, $variant['image'])
                         : null;
 
@@ -87,5 +98,10 @@ class ProductRepository implements ProductInterface
 
 
     public function show($product) {}
-    public function delete($product) {}
+
+
+    public function destroy($product)
+    {
+        return $product->delete();
+    }
 }
